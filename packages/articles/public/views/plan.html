@@ -1,0 +1,32 @@
+<section data-ng-controller="PlanCtrl" ng-cloak>
+  <div ng-model="records">
+    <h1><strong>PLAN: </strong>{{records[whichItem].PLAN}}</h1>
+    <div class="info">
+      <pre><h3><strong>DESCRIPTION: </strong>{{records[whichItem].DESCRIPTION_OF_PLAN}}</h3></pre>
+      <div ng-controller="SimpleMapController">
+      <leaflet center="center" width="700" height="500"></leaflet>
+    </div>
+      <br>
+        <button type="button" class="btn btn-danger btn-lg" data-toggle="collapse" data-target="#drawings" ng-click="getFiles(records[whichItem].PLAN)"><span class="glyphicon glyphicon-list">  Drawings</span></button>
+        <div id="drawings" class="collapse"><div class="list-group" ng-bind-html="parsedHTML">Holla</div></div>
+        
+        </div>
+ 
+              
+
+        <!-- <a ng-href="http://gis.raleighnc.gov/publicutility/devplans/{{records[whichItem].PLAN}}"><button type="button" class="btn btn-primary btn-lg" >
+              <span class="glyphicon glyphicon-info-sign"></span> View Plans</button></a> -->
+      
+    </div>
+    <br>
+    <div class="pull-right">
+    <a href="#/search/{{prevItem}}" class="btn btn-primary btn-lg" role="button">&lt;</a>
+    <a href="#/search/{{nextItem}}" class="btn btn-primary btn-lg" role="button">&gt;</a>
+	</div>
+  </div>
+  <a href="#search" class="btn btn-primary btn-lg">&laquo; Back to search</a>
+</section><br><br><br>
+
+<div ng-cloak class="footer">
+  <p><img style="width:20px; height: 20px;" ng-src="images/City-Seal-2color.png"> City of Raleigh - Public Utilities - GIS</p>
+</div>

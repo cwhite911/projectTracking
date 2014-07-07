@@ -1,0 +1,27 @@
+
+<div ng-cloak class="container">
+  <div class="row">
+    <div class="col-md-5">
+    	<form role="form" name="updateForm" class="css-form" ng-submit="send(updateForm)" novalidate>
+			<div class="form-group" ng-repeat="column in fields.fields">
+				<strong ng-show="checkID(column.name)">{{column.name}}</strong><br>
+					<input  ng-show="checkForType('esriFieldTypeString', $index)" type="text" ng-model="updateForm[column.name]"   required/><br />
+					<input ng-show="checkForType('esriFieldTypeDouble', $index)"type="number" ng-model="updateForm[column.name]"  required/><br />
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+		<div class="btn-group">
+			<button ng-show="postResults.success" ng-click="delete()" class="btn btn-danger" type="button">Delete Last Record</button>
+		</div>
+	</div>
+    <div class="col-md-7">
+    	<div ng-show="deleteResults.success" class="alert alert-info"><strong>Record Successfully Deleted- <br>Object: {{postResults.objectId}}</strong></div>
+    	<div ng-show="postResults.success" class="alert alert-info"><strong>Record Added- <br>Object: {{postResults.objectId}}</strong></div>
+    </div>
+  </div>
+</div>
+  
+
+<div ng-cloak class="footer">
+  <p><img style="width:20px; height: 20px;" ng-src="/packages/articles/public/assets/img/City-Seal-2color.png"> City of Raleigh - Public Utilities - GIS</p>
+</div>

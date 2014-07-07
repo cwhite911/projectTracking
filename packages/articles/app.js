@@ -32,6 +32,16 @@ Articles.register(function(app, auth, database) {
         'title': 'Search',
         'link': 'search'
     });
+    Articles.menus.add({
+        'roles': ['authenticated'],
+        'title': 'Add Record',
+        'link': 'add record'
+    });
+    Articles.menus.add({
+        'roles': ['authenticated'],
+        'title': 'Contact',
+        'link': 'contact'
+    });
     //Articles.aggregateAsset('js','/packages/system/public/services/menus.js',{group:'footer',absolute:true, weight:-9999});
     Articles.aggregateAsset('js', 'test.js', {
         group: 'footer',

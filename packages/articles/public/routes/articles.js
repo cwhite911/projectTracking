@@ -53,6 +53,20 @@ angular.module('mean').config(['$stateProvider',
                     loggedin: checkLoggedin
                 }
             })
+            .state('contact', {
+                url: '/articles/contact',
+                templateUrl: 'articles/views/contact.html',
+                resolve: {
+                    loggedin: checkLoggedin
+                }
+            })
+            .state('add record', {
+                url: '/articles/add',
+                templateUrl: 'articles/views/form.html',
+                resolve: {
+                    loggedin: checkLoggedin
+                }
+            })
             .state('article by id', {
                 url: '/articles/:articleId',
                 templateUrl: 'articles/views/view.html',
