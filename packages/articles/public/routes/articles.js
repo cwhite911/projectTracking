@@ -67,6 +67,13 @@ angular.module('mean').config(['$stateProvider',
                     loggedin: checkLoggedin
                 }
             })
+        .state('plan', {
+            url: '/articles/search/:itemId',
+                templateUrl: 'articles/views/plan.html',
+                resolve: {
+                    loggedin: checkLoggedin
+                }
+            })
             .state('article by id', {
                 url: '/articles/:articleId',
                 templateUrl: 'articles/views/view.html',

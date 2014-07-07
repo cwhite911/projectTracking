@@ -1,8 +1,8 @@
 'use strict';
-
-angular.module('mean').controller('PlanCtrl', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+angular.module('mean', ['leaflet-directive']);
+angular.module('mean').controller('PlanCtrl', ['$scope','$http', '$stateParams', function ($scope, $http, $stateParams) {
 	$scope.records = [];
-	$scope.whichItem = $routeParams.itemId;
+	$scope.whichItem = $stateParams.itemId;
 	var start = 0;
 	function getData(count){
 		var options = {outFields: '*', where: 'OBJECTID >' + count};
@@ -15,13 +15,13 @@ angular.module('mean').controller('PlanCtrl', ['$scope','$http', '$routeParams',
 				start = start + 1000;
 				getData(start);
 			}
-			if ($routeParams.itemId > 0) {
-				$scope.prevItem = Number($routeParams.itemId)-1;
+			if ($stateParams.itemId > 0) {
+				$scope.prevItem = Number($stateParams.itemId)-1;
 			} else {
 				$scope.prevItem = $scope.records.length-1;
 			}
-			if ($routeParams.itemId < $scope.records.length-1) {
-				$scope.nextItem = Number($routeParams.itemId)+1;
+			if ($stateParams.itemId < $scope.records.length-1) {
+				$scope.nextItem = Number($stateParams.itemId)+1;
 			} else {
 				$scope.nextItem = 0;
 			}

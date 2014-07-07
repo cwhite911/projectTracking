@@ -34,7 +34,7 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="item in pageInfo[pageNumber] | orderBy:predicate:reverse">
-      <a ng-href="#search/{{records.indexOf(item)}}">
+      <a ng-href="#!/articles/search/{{records.indexOf(item)}}">
   			<td class="active">{{item.OBJECTID}}</td>
   			<td>{{item.PLAN_TYPE}}</td>
   			<td>{{item.PLAN_NUMBER}}</td>
@@ -43,7 +43,7 @@
   			<td>{{item.DESCRIPTION_OF_PLAN}}</td>
   			<td>{{item.NUMBER_OF_SHEETS}}</td>
   			<td>{{item.PROJECT_ON_FILE}}</td>
-        <td><a ng-href="#search/{{records.indexOf(item)}}"><button type="button" class="btn btn-primary btn-sm" >
+        <td><a ng-href="#!/articles/search/{{records.indexOf(item)}}"><button type="button" class="btn btn-primary btn-sm" >
               <span class="glyphicon glyphicon-info-sign"></span></button></a>
         </td>
       </a>
