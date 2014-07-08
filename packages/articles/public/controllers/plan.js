@@ -1,5 +1,5 @@
 'use strict';
-angular.module('mean', ['leaflet-directive']);
+
 angular.module('mean').controller('PlanCtrl', ['$scope','$http', '$stateParams', function ($scope, $http, $stateParams) {
 	$scope.records = [];
 	$scope.whichItem = $stateParams.itemId;

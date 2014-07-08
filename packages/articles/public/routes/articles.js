@@ -1,5 +1,5 @@
 'use strict';
-
+// angular.module('mean', ['leaflet-directive']);
 //Setting up route
 angular.module('mean').config(['$stateProvider',
     function($stateProvider) {

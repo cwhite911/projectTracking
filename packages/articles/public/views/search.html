@@ -1,80 +1,76 @@
-<!--<div ng-controller="FormController as form">{{fields.name}}</div>-->
 <section data-ng-controller="SearchCtrl">
-<div ng-cloak class="container">
-  <div class="row">
-    <section class="seach">
-	<div class="col-md-12">
-		<input id="search" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for Record"><br>
-		<label>Plan Type: </label>
-		<select ng-model="planType">
-			<option value="All" selected="selected">All</option>
-  			<option value="S">S - Subdivision</option>
-  			<option value="SP">SP - Site Plan</option>
-  			<option value="EX">EX - Exempy Subdivision</option>
-  			<option value="GH">GH - Group Housing</option>
-  			<option value="MS">MS - Minor Subdivision</option>
-  			<option value="PA">PA - Plan Approval</option>
-  			<option value="IP">IP - Internal Project</option>
-  			<option value="MP">MP - Master Plan</option>
-  			<option value="IR">IR - Infill Recombination</option>
-  			<option value="RW">RW - Right of Way</option>
-  			<option value="SU">SU - Special Use</option>
-  			<option value="MH">MH - Mobil Home</option>
-  			<option value="BS">BS - Boundary Survey</option>
-  			<option value="SC">SC - Shopping Center</option>
-  			<option value="ENG">ENG A-Z</option>
-		</select>
-    {{getRecordLength(searchText, planType)}}
-	<table ng-show="searchText" class="table table-hover">
-	<thead>
-		<tr class="active">
-  			<th ng-repeat="column in fields.fields"><a href="" ng-click="reverse=!reverse;order(column.name, reverse)">{{column.name}}</a></th>
-        <th><a href="">INFO</a></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr ng-repeat="item in pageInfo[pageNumber] | orderBy:predicate:reverse">
-      <a ng-href="#!/articles/search/{{records.indexOf(item)}}">
-  			<td class="active">{{item.OBJECTID}}</td>
-  			<td>{{item.PLAN_TYPE}}</td>
-  			<td>{{item.PLAN_NUMBER}}</td>
-  			<td>{{item.PLAN_YEAR}}</td>
-  			<td>{{item.PLAN}}</td>
-  			<td>{{item.DESCRIPTION_OF_PLAN}}</td>
-  			<td>{{item.NUMBER_OF_SHEETS}}</td>
-  			<td>{{item.PROJECT_ON_FILE}}</td>
-        <td><a ng-href="#!/articles/search/{{records.indexOf(item)}}"><button type="button" class="btn btn-primary btn-sm" >
-              <span class="glyphicon glyphicon-info-sign"></span></button></a>
-        </td>
-      </a>
-	  </tr>
-     
-	</tbody>
-	<tfoot>{{filteredText.length}}
-	</tfoot>
-	</table>
-  <h3 ng-show="searchText" class="text-info">Page {{pageNumber + 1}} of {{numberPages}}</h3>
-  <!-- {{pageGen()}} -->
-  <ul ng-show="searchText" class="pagination">
-  <li><a href="" ng-show="pageNumber !== 0" ng-click="prevPage()" >&laquo;</a></li>
-  <li class="disabled"><a href="" ng-show="pageNumber === 0" >&laquo;</a></li>
-  <li ng-repeat="page in pageArray | limitTo: pageSize"><a href="" ng-click="checkPage(page);">{{page + 1}}</a></li>
-  <li><a href="" ng-show="pageNumber !== numberPages - 1" ng-click="nextPage()">&raquo;</a></li>
-  <li class="disabled"><a href="" ng-show="pageNumber === numberPages - 1">&raquo;</a></li>
-</ul>
-	</div>
-</div>
-</section>
-
-      
+    <div ng-cloak class="container">
+      <div class="row">
+        <section class="seach">
+            <div class="col-md-2">
+            <ul class="nav nav-pills nav-stacked">
+              <li ng-class="{'active': pageState.devPlan, '': !pageState.devPlan}"><a href="" ng-click="checkSeachState('devPlan')">Development Plans</a></li>
+              <li ng-class="{'active': pageState.project, '': !pageState.project}"><a href="" ng-click="checkSeachState('project')">Projects</a></li>
+              <li><a href="#">Permit</a></li>
+            </ul>
+        </div>
+	        <div ng-show="pageState.devPlan" class="col-md-10">
+		        <input id="search" class="center-block" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for Record"><br>
+		        <label class="center-block">Plan Type: </label>
+		        <select ng-model="planType">
+			        <option value="All" selected="selected">All</option>
+                    <option value="S">S - Subdivision</option>
+                    <option value="SP">SP - Site Plan</option>
+                    <option value="EX">EX - Exempy Subdivision</option>
+                    <option value="GH">GH - Group Housing</option>
+                    <option value="MS">MS - Minor Subdivision</option>
+                    <option value="PA">PA - Plan Approval</option>
+  					<option value="IP">IP - Internal Project</option>
+  					<option value="MP">MP - Master Plan</option>
+  					<option value="IR">IR - Infill Recombination</option>
+  					<option value="RW">RW - Right of Way</option>
+  					<option value="SU">SU - Special Use</option>
+  					<option value="MH">MH - Mobil Home</option>
+  					<option value="BS">BS - Boundary Survey</option>
+  					<option value="SC">SC - Shopping Center</option>
+  					<option value="ENG">ENG A-Z</option>
+		        </select>
+            {{getRecordLength(searchText, planType)}}
+	        <table ng-show="searchText" class="table table-hover">
+	            <thead>
+		            <tr class="active">
+  			            <th ng-repeat="column in fields.fields"><a href="" ng-click="reverse=!reverse;order(column.name, reverse)">{{column.name}}</a></th>
+                        <th><a href="">INFO</a></th>
+		            </tr>
+	            </thead>
+	            <tbody>
+		            <tr ng-repeat="item in pageInfo[pageNumber] | orderBy:predicate:reverse">
+  			            <td class="active">{{item.OBJECTID}}</td>
+  						<td>{{item.PLAN_TYPE}}</td>
+  						<td>{{item.PLAN_NUMBER}}</td>
+  						<td>{{item.PLAN_YEAR}}</td>
+  						<td>{{item.PLAN}}</td>
+  						<td>{{item.DESCRIPTION_OF_PLAN}}</td>
+  						<td>{{item.NUMBER_OF_SHEETS}}</td>
+  						<td>{{item.PROJECT_ON_FILE}}</td>
+                        <td><a ng-href="/#!/articles/search/{{records.indexOf(item)}}"><button type="button" class="btn btn-primary btn-sm" ><span class="glyphicon glyphicon-info-sign"></span></button></a></td>
+                    </tr>
+                 </tbody>
+                <tfoot>{{filteredText.length}}</tfoot>
+            </table>
+            <h3 ng-show="searchText" class="text-info">Page {{pageNumber + 1}} of {{numberPages}}</h3>
+            <!-- {{pageGen()}} -->
+            <ul ng-show="searchText" class="pagination">
+				<li><a href="" ng-show="pageNumber !== 0" ng-click="prevPage()" >&laquo;</a></li>
+				<li class="disabled"><a href="" ng-show="pageNumber === 0" >&laquo;</a></li>
+				<li ng-class="{'active': pageNumber === page, '': !pageNumber}" ng-repeat="page in pageArray | limitTo: pageSize"><a href="" ng-click="checkPage(page);">{{page + 1}}</a></li>
+				<li><a href="" ng-show="pageNumber !== numberPages - 1" ng-click="nextPage()">&raquo;</a></li>
+				<li class="disabled"><a href="" ng-show="pageNumber === numberPages - 1">&raquo;</a></li>
+                    </ul>
+        </div>
+        <div ng-show="pageState.project" class="col-md-10">PROJECTS</div>
+        </section>
+      </div>
     </div>
-    <div class="col-md-2"></div>
-  </div>
-</div>
 </section>  
 
 <div ng-cloak class="footer">
-  <p><img style="width:20px; height: 20px;" ng-src="/packages/articles/public/assets/img/City-Seal-2color.png"> City of Raleigh - Public Utilities - GIS</p>
+  <p class="pull-right"><img style="width:20px; height: 20px;" ng-src="/packages/articles/public/assets/img/City-Seal-2color.png"> City of Raleigh - Public Utilities - GIS</p>
 </div>
 
 

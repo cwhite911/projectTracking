@@ -4,3 +4,29 @@ h1 {
 ul.articles li:not(:last-child) {
 	border-bottom: 1px solid #ccc
 }
+#search {
+  width: 90%;
+  min-width: 320px;
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  /*border-radius: 20px;*/
+  padding: 20px 30px;
+  font-size: 40px;
+}
+
+#search h1 {
+  color: #EEE8D5;
+}
+
+
+.css-form input.ng-invalid.ng-dirty {
+  border:1px solid #FA787E;
+  
+}
+
+.css-form input.ng-valid.ng-dirty {
+  border:1px solid #78FA89;
+  
+}

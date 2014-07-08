@@ -67,6 +67,7 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
 
 	$scope.checkPage = function (page){
 		$scope.pageNumber = page;
+        return true;
 	};
 	$scope.nextPage = function(){
 		$scope.pageNumber+= 1;
@@ -74,6 +75,21 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
 	$scope.prevPage = function(){
 		$scope.pageNumber-= 1;
 	};
+    
+    
+    $scope.pageState = {devPlan: true, project: false};
+    
+    $scope.checkSeachState = function (data){
+      	for (var each in $scope.pageState){
+            if (each === data){
+                $scope.pageState[each] = true;
+                data = "active"
+            }
+            else{
+                $scope.pageState[each] = false;
+            }
+        }  
+    };
 
 
 }]);
