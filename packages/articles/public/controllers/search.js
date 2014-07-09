@@ -1,31 +1,98 @@
 'use strict';
 
 angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', function ($scope, $http, $filter) {
-	$scope.fields = [];
-	$scope.searchText = '';
-	$http.get('http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/DataCollection/FeatureServer/2?f=pjson').success(function(data){
-		$scope.fields = data;
-		console.log(data);
+    //REST API services
+    var rest = {
+        development: 'http://mapstest.raleighnc.gov/arcgis/rest/services/PublicUtility/ProjectTracking/FeatureServer',
+        production: 'http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/DataCollection/FeatureServer'
+    };
+    //Gets array of objects of layer ids and names
+	$scope.data = [];
+    $http.get(rest.development, {params: {f: 'json'}, cache: true}).success(function(data){
+		var layers = data.layers;
+        var tables = data.tables;
+		for (var each in layers){
+            $scope.data.push(layers[each]);
+        }
+        for (var each in tables){
+            $scope.data.push(tables[each]);
+        }
 	});
-	$scope.planType = 'All';
+    
+    //Controlls side panel tabs
+    $scope.pageState = {
+        	devPlan: true,
+        	project: false
+    	};
+
+    $scope.checkSeachState = function (data){
+      	for (var each in $scope.pageState){
+            if (each === data){
+                $scope.pageState[each] = true;    
+            }
+            else{
+                $scope.pageState[each] = false;
+            }
+        }  
+    };
+    
+    //Creates list of field names
+    $scope.fields = [];
 	$scope.records = [];
 	var start = 0;
-	function getData(count){
-		var options = {outFields: '*', where: 'OBJECTID >' + count};
-		$http.get('http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/DataCollection/FeatureServer/2/query?f=pjson', {params: options})
+	function getData(count, layerID){
+        var options = {
+            f: 'json',
+            outFields: '*',
+            where: 'OBJECTID >' + count
+        };
+		$http.get(rest.development + '/'+ layerID + '/query?', {params: options, cache: true})
 			.success(function(data){
-			for (var each in data.features){
-				$scope.records.push(data.features[each].attributes);
-			}
-			if (data.features.length === 1000 ){
-				start = start + 1000;
-				getData(start);
-			}
-		});
-	}
-	getData(start);
-	console.log($scope.records);
+                if ($scope.fields.length === 0){
+                	for (var field in data.fields){
+                    	$scope.fields.push(data.fields[field]);
+                	}
+               	}
+				for (var each in data.features){
+					$scope.records.push(data.features[each].attributes);
+				}
+				if (data.features.length === 1000 ){
+					start = start + 1000;
+					getData(start, layerID);
+				}
+			});
+		}
+    
+    //Watches for changes in data to load
+        $scope.$watchCollection('data', function(current, past) {
+            $scope.$watchCollection('pageState', function(now, then) {
+            if ($scope.pageState.devPlan === true){
+                for (var each in $scope.data){
+            		if ($scope.data[each].name === "RPUD.DEVELOPMENT_PLANS"){
+                        $scope.fields = [];
+						$scope.records = [];
+                        start = 0;
+                		getData(start, $scope.data[each].id);
+        			}
+             	}  
+    		}
+            
+            if ($scope.pageState.project === true){
+                for (var each in $scope.data){
+            		if ($scope.data[each].name === "Project Tracking"){
+                        $scope.fields = [];
+						$scope.records = [];
+                        start = 0;
+                		getData(start, $scope.data[each].id);
+        			}
+             	}  
+    		}
+           });
+        });
 	
+	console.log($scope.records);
+	$scope.searchText = '';
+	$scope.planType = 'All';
 	var orderBy = $filter('orderBy');
 	$scope.order = function(predicate, reverse) {
 		$scope.records = orderBy($scope.records, predicate, reverse);
@@ -41,9 +108,6 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
 	$scope.getRecordLength = function (info, plantype){
 		$scope.pageArray = [];
 		$scope.pageInfo = [];
-		// if ($scope.pageNumber > 0){
-			// $scope.pageNumber = 0;
-		// }
 		var slicer = {start:0, end: 10};
 		if (plantype !== 'All'){
 			$scope.filteredText = $filter('filter')($scope.records, {$: info, PLAN_TYPE: plantype});
@@ -77,20 +141,10 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
 	};
     
     
-    $scope.pageState = {devPlan: true, project: false};
     
-    $scope.checkSeachState = function (data){
-      	for (var each in $scope.pageState){
-            if (each === data){
-                $scope.pageState[each] = true;
-                data = "active"
-            }
-            else{
-                $scope.pageState[each] = false;
-            }
-        }  
-    };
 
 
 }]);
+
+
 
