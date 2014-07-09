@@ -68,8 +68,15 @@ angular.module('mean').config(['$stateProvider',
                 }
             })
         .state('plan', {
-            url: '/articles/search/:itemId',
+            url: '/articles/search/devplan/:itemId',
                 templateUrl: 'articles/views/plan.html',
+                resolve: {
+                    loggedin: checkLoggedin
+                }
+            })
+        .state('project', {
+            url: '/articles/search/project/:itemId',
+                templateUrl: 'articles/views/project.html',
                 resolve: {
                     loggedin: checkLoggedin
                 }

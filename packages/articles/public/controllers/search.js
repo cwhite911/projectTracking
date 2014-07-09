@@ -11,18 +11,19 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
     $http.get(rest.development, {params: {f: 'json'}, cache: true}).success(function(data){
 		var layers = data.layers;
         var tables = data.tables;
-		for (var each in layers){
-            $scope.data.push(layers[each]);
+		for (var l in layers){
+            $scope.data.push(layers[l]);
         }
-        for (var each in tables){
-            $scope.data.push(tables[each]);
+        for (var t in tables){
+            $scope.data.push(tables[t]);
         }
 	});
     
     //Controlls side panel tabs
     $scope.pageState = {
         	devPlan: true,
-        	project: false
+        	project: false,
+        	detailedIntersection: false
     	};
 
     $scope.checkSeachState = function (data){
@@ -36,7 +37,18 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
         }  
     };
     
-    //Creates list of field names
+    Array.prototype.find = function (objectid){
+        for (var i = 0; i < this.length; i++) {
+        	if (this[i] === objectid){
+                return true;
+            }
+            else {
+                return false;
+            }
+    	}  
+    };
+    
+    //GETS list of field names and records
     $scope.fields = [];
 	$scope.records = [];
 	var start = 0;
@@ -44,7 +56,9 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
         var options = {
             f: 'json',
             outFields: '*',
-            where: 'OBJECTID >' + count
+            where: 'OBJECTID >' + count,
+            orderByFields: 'OBJECTID ASC',
+            returnGeometry: false
         };
 		$http.get(rest.development + '/'+ layerID + '/query?', {params: options, cache: true})
 			.success(function(data){
@@ -53,13 +67,19 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
                     	$scope.fields.push(data.fields[field]);
                 	}
                	}
-				for (var each in data.features){
-					$scope.records.push(data.features[each].attributes);
+				for (var f in data.features){
+					$scope.records.push(data.features[f].attributes);
 				}
+                var len = data.features.length - 1;
+         
+                var startID = data.features[0].attributes.OBJECTID;
+                var endID = data.features[len].attributes.OBJECTID;
+       			
 				if (data.features.length === 1000 ){
-					start = start + 1000;
+					start = endID;
 					getData(start, layerID);
 				}
+            
 			});
 		}
     
@@ -68,7 +88,7 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
             $scope.$watchCollection('pageState', function(now, then) {
             if ($scope.pageState.devPlan === true){
                 for (var each in $scope.data){
-            		if ($scope.data[each].name === "RPUD.DEVELOPMENT_PLANS"){
+            		if ($scope.data[each].name === 'RPUD.DEVELOPMENT_PLANS'){
                         $scope.fields = [];
 						$scope.records = [];
                         start = 0;
@@ -79,7 +99,18 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
             
             if ($scope.pageState.project === true){
                 for (var each in $scope.data){
-            		if ($scope.data[each].name === "Project Tracking"){
+            		if ($scope.data[each].name === 'Project Tracking'){
+                        $scope.fields = [];
+						$scope.records = [];
+                        start = 0;
+                		getData(start, $scope.data[each].id);
+        			}
+             	}  
+    		}
+            
+           	if ($scope.pageState.detailedIntersection === true){
+                for (var each in $scope.data){
+            		if ($scope.data[each].name === 'RPUD.DetailedIntersections'){
                         $scope.fields = [];
 						$scope.records = [];
                         start = 0;

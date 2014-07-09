@@ -6,7 +6,7 @@
             <ul class="nav nav-pills nav-stacked">
               <li ng-class="{'active': pageState.devPlan, '': !pageState.devPlan}"><a href="" ng-click="checkSeachState('devPlan')">Development Plans</a></li>
               <li ng-class="{'active': pageState.project, '': !pageState.project}"><a href="" ng-click="checkSeachState('project')">Projects</a></li>
-              <li><a href="#">Permit</a></li>
+              <li ng-class="{'active': pageState.detailedIntersection, '': !pageState.detailedIntersection}"><a href="" ng-click="checkSeachState('detailedIntersection')">Detailed Intersection</a></li>
             </ul>
         </div>
 	        <div ng-show="pageState.devPlan" class="col-md-10">
@@ -48,10 +48,10 @@
   						<td>{{item.DESCRIPTION_OF_PLAN}}</td>
   						<td>{{item.NUMBER_OF_SHEETS}}</td>
   						<td>{{item.PROJECT_ON_FILE}}</td>
-                        <td><a ng-href="/#!/articles/search/{{records.indexOf(item)}}"><button type="button" class="btn btn-primary btn-sm" ><span class="glyphicon glyphicon-info-sign"></span></button></a></td>
+                        <td><a ng-href="/#!/articles/search/devplan/{{records.indexOf(item)}}"><button type="button" class="btn btn-primary btn-sm" ><span class="glyphicon glyphicon-info-sign"></span></button></a></td>
                     </tr>
                  </tbody>
-                <tfoot>{{filteredText.length}}</tfoot>
+                <tfoot>Results: {{filteredText.length}}</tfoot>
             </table>
             <h3 ng-show="searchText" class="text-info">Page {{pageNumber + 1}} of {{numberPages}}</h3>
             <!-- {{pageGen()}} -->
@@ -66,7 +66,7 @@
 <!-- Beginning of Project Tracking Tab -->
         <div ng-show="pageState.project" class="col-md-10">
             <input id="search" class="center-block" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for Project..."><br>
-            {{getRecordLength(searchText, planType)}} Projects
+            {{getRecordLength(searchText, planType)}} 
 	        <table ng-show="searchText" class="table table-hover">
 	            <thead>
 		            <tr class="active">
@@ -83,10 +83,47 @@
   						<td>{{item.FORMERNAME}}</td>
   						<td>{{item.ALIAS}}</td>
   						<td>{{item.CIP}}</td>
+                        <td><a ng-href="/#!/articles/search/project/{{records.indexOf(item)}}"><button type="button" class="btn btn-primary btn-sm" ><span class="glyphicon glyphicon-info-sign"></span></button></a></td>
+                    </tr>
+                 </tbody>
+                <tfoot>Results: {{filteredText.length}}</tfoot>
+            </table>
+            <h3 ng-show="searchText" class="text-info">Page {{pageNumber + 1}} of {{numberPages}}</h3>
+            
+            <ul ng-show="searchText" class="pagination">
+				<li><a href="" ng-show="pageNumber !== 0" ng-click="prevPage()" >&laquo;</a></li>
+				<li class="disabled"><a href="" ng-show="pageNumber === 0" >&laquo;</a></li>
+				<li ng-class="{'active': pageNumber === page, '': !pageNumber}" ng-repeat="page in pageArray | limitTo: pageSize"><a href="" ng-click="checkPage(page);">{{page + 1}}</a></li>
+				<li><a href="" ng-show="pageNumber !== numberPages - 1" ng-click="nextPage()">&raquo;</a></li>
+				<li class="disabled"><a href="" ng-show="pageNumber === numberPages - 1">&raquo;</a></li>
+            </ul> 
+        </div>
+       <!-- Beginning of Detailed Intersections -->
+        <div ng-show="pageState.detailedIntersection" class="col-md-10">
+            <input id="search" class="center-block" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for Intersection..."><br>
+            {{getRecordLength(searchText, planType)}} 
+            <div class="alert alert-danger" role="alert">Data is actively being corrected, please forgive any errors at this time.<br>Thanks- PUGIS</div>
+	        <table ng-show="searchText" class="table table-hover">
+	            <thead>
+		            <tr class="active">
+<!--   			            <th ng-repeat="column in fields | limitTo : 6 | filter: {name: 'OBJECTID' && 'LOC_NAME'} "><a href="" ng-click="reverse=!reverse;order(column.name, reverse)">{{column.name}}</a></th> -->
+                        <th><a href="" ng-click="reverse=!reverse;order('OBJECTID', reverse)">OBJECTID</a></th>
+                        <th><a href="" ng-click="reverse=!reverse;order('LOC_NAME', reverse)">LOC_NAME</a></th>
+                        <th><a href="" ng-click="reverse=!reverse;order('MATCH_ADDR', reverse)">MATCH_ADDR</a></th>
+                        <th><a href="" ng-click="reverse=!reverse;order('INERSECTION', reverse)">INERSECTION</a></th>
+                        <th><a href="">INFO</a></th>
+		            </tr>
+	            </thead>
+	            <tbody>
+		            <tr ng-repeat="item in pageInfo[pageNumber] | orderBy:predicate:reverse">
+  			            <td class="active">{{item.OBJECTID}}</td>
+  						<td>{{item.LOC_NAME}}</td>
+  						<td>{{item.MATCH_ADDR}}</td>
+  						<td>{{item.INERSECTION}}</td>
                         <td><a ng-href="/#!/articles/search/{{records.indexOf(item)}}"><button type="button" class="btn btn-primary btn-sm" ><span class="glyphicon glyphicon-info-sign"></span></button></a></td>
                     </tr>
                  </tbody>
-                <tfoot>{{filteredText.length}}</tfoot>
+                <tfoot>Results: {{filteredText.length}}</tfoot>
             </table>
             <h3 ng-show="searchText" class="text-info">Page {{pageNumber + 1}} of {{numberPages}}</h3>
             

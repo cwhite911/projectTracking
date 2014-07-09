@@ -16,7 +16,8 @@
                 "bower_components/angular-bootstrap/ui-bootstrap.js",
                 "bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
                 "bower_components/angular-leaflet/dist/angular-leaflet-directive.js",
-                "bower_components/leaflet-dist/leaflet.js"
+                "bower_components/leaflet-dist/leaflet.js",
+                "bower_components/esri-leaflet/dist/esri-leaflet.js"
                 
             ]
         }
