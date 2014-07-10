@@ -12,6 +12,7 @@
     "angular-bootstrap": "0.11.0",
     "angular-ui-router": "#master",
     "angular-leaflet": "~0.7.7",
-    "esri-leaflet": "latest"
+    "esri-leaflet": "latest",
+    "leaflet-plugins": "latest"
   }
 }

@@ -19,7 +19,7 @@ angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParam
         }
 	});
 	$scope.records = [];
-    $scope.fullRecord = [];
+    
 	$scope.whichItem = $stateParams.itemId;
 	var start = 0;
 	function getData(count, layerID){
@@ -28,14 +28,15 @@ angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParam
             outFields: '*',
             where: 'OBJECTID >' + count,
             orderByFields: 'OBJECTID ASC',
+            outSR: 4326,
             returnGeometry: true
         };
 		$http.get(rest.development + '/'+ layerID + '/query?', {params: options, cache: true})
 			.success(function(results){
 			for (var each in results.features){
-				$scope.records.push(results.features[each].attributes);   
+				$scope.records.push(results.features[each]);  
 			}
-            $scope.fullRecord.push(results)
+            
 			var len = results.features.length - 1;
             var endID = results.features[len].attributes.OBJECTID;
 			if (results.features.length === 1000 ){
@@ -63,6 +64,30 @@ angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParam
     });  
 	
 	console.log($scope.records);
+    
+//Set up to project data back to ArcGIS Server
+//         $scope.geoOptions = {
+//             f: 'json',
+//             inSR: 2264,
+//       		outSR: 4326,
+//         	geometries: {
+//                 'geometryType': 'esriGeometryPolygon',
+//                 'geometries': []
+//             }
+//         };
+    
+// 	$scope.setGeometry = function (data){
+//         if (data !== undefined){
+//         	$scope.geoOptions.geometries.geometries.push(data);
+//         }
+//     }
+//     $scope.$watchCollection('records', function(current, past) {
+
+//     $http.get('http://gis.raleighnc.gov/arcgis/rest/services/Utilities/Geometry/GeometryServer/project', {params: $scope.geoOptions, cache: true}).success(function(webgeo){
+//         console.log(webgeo);
+//     });
+    
+// });
 
 	$scope.getFiles = function (plan){
 		$scope.req = 'http://gis.raleighnc.gov/publicutility/devplans/' + plan;
@@ -83,53 +108,78 @@ angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParam
 				}
 			});
 	};
-
-}]);
-
-
-angular.module('mean').controller('SimpleMapController', [ '$scope', function($scope) {
+    
+    
+    
+    $scope.getGeojson = function (geo, attr){
+        $scope.geojson = {
+            "type": "FeatureCollection",
+    		"features": [
+      			{ 
+                    "type": "Feature",
+         			"geometry": {
+           				"type": "Polygon",
+           				"coordinates": geo
+         			},
+         			"properties": attr
+         		}
+       		]
+     	};
+        $scope.bounds = 
+            {
+            	lat: geo[0][0][1],
+                lng: geo[0][0][0],
+            	zoom: 16
+             };
+        
+        angular.extend($scope, {
+             center: $scope.bounds,
+        	geojson: {
+                	data: $scope.geojson,
+                 	style:{
+                    	fillColor: '#470467',
+                    	weight: 2,
+                    	opacity: 1,
+                    	color: '#470014',
+                    	fillOpacity: 0.7
+                	},
+//                  resetStyleOnMouseout: true
+                }
+        });
+};
+    
    angular.extend($scope, {
                 center: {
                     lat: 35.843768,
                     lng: -78.6450559,
-                    zoom: 11
+                    zoom: 10
                 },
-       defaults: {
-        tileLayer: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
-        maxZoom: 14,
-        path: {
-            weight: 10,
-            color: '#800000',
-            opacity: 1
-        }
-    },
-       layers: {
+       			legend: {
+                    colors: [ '#CC0066', '#006699', '#FF0000', '#00CC00', '#FFCC00' ],
+                    labels: [ 'Oceania', 'America', 'Europe', 'Africa', 'Asia' ]
+                },
+       			layers: {
                     baselayers: {
-				    	world: {
-					    	name: 'Imagery',
-					        type: 'dynamic',
-					        url: 'http://mapstest.raleighnc.gov/arcgis/rest/services/PublicUtility/ProjectTracking/MapServer',
-					        visible: false,	        
-					        layerOptions: {
-					            layers: [0, 1, 2, 3],
-				                opacity: 1,
-				                attribution: 'Copyright:© City of Raleigh'
-					        }
-				    	},
+                        googleTerrain: {
+                            name: 'Google Terrain',
+                            layerType: 'TERRAIN',
+                            type: 'google'
+                        },
+                        googleHybrid: {
+	                        name: 'Google Hybrid',
+	                        layerType: 'HYBRID',
+	                        type: 'google'
+	                    },
+                        googleRoadmap: {
+                            name: 'Google Streets',
+                            layerType: 'ROADMAP',
+                            type: 'google'
+                        }
                     }
-//                         projects:{
-//                    			name: 'Project Tracking',
-//                    			type: 'Feature Layer',
-//                    			url: 'http://mapstest.raleighnc.gov/arcgis/rest/services/PublicUtility/ProjectTracking/MapServer/'
-//                    			visible: true,
-//                    			layerOptions: {
-//                    				layers: [1],
-//                    				opacity: 1,
-//                   		 		attribution: 'Copyright:© City of Raleigh'
-//                	   			}
-//                			}
-//                     },
-   }
+                }
+       			
+
      
         });
+
 }]);
