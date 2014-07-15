@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParams', function ($scope, $http, $stateParams) {
+angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParams', '$location', function ($scope, $http, $stateParams, $location) {
     //REST API services
     var rest = {
         development: 'http://mapstest.raleighnc.gov/arcgis/rest/services/PublicUtility/ProjectTracking/FeatureServer',
@@ -109,8 +109,20 @@ angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParam
 			});
 	};
     
+//Check permits
+
+    $scope.checkPermit = function(type){
+        if (type === 1){
+            return true;
+        }
+        else{
+            return false;
+        }
+        
+    }
     
     
+ //Creates geojson object and creates map bounds object.  
     $scope.getGeojson = function (geo, attr){
         $scope.geojson = {
             "type": "FeatureCollection",
@@ -142,12 +154,23 @@ angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParam
                     	opacity: 1,
                     	color: '#470014',
                     	fillOpacity: 0.7
-                	},
-//                  resetStyleOnMouseout: true
+                	},               
                 }
         });
 };
     
+//Watach records for changes and set geojson data 
+  $scope.$watchCollection('records', function(curretn, past){
+      if ($scope.records[$scope.whichItem] !== undefined){
+    	$scope.geo = $scope.records[$scope.whichItem].geometry.rings;
+    	$scope.attr = $scope.records[$scope.whichItem].attributes;
+    	$scope.getGeojson($scope.geo, $scope.attr);
+    }
+      
+  });
+  
+  
+//Default set up for map, adds default center, legend, google map layers    
    angular.extend($scope, {
                 center: {
                     lat: 35.843768,

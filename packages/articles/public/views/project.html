@@ -3,11 +3,12 @@
     <h1><strong>PROJECTID: </strong>{{records[whichItem].attributes.PROJECTID}}</h1>
     <div class="info">
       <pre><h3><strong>PROJECT NAME: </strong>{{records[whichItem].attributes.PROJECTNAME}}</h3></pre>
+<!--         {{getGeojson(records[whichItem].geometry.rings, records[whichItem].attributes)}} -->
       <div>
           <div ng-cloak class="container">
               <div class="row">
-                  <div class="col-md-7" ng-click="getGeojson(records[whichItem].geometry.rings, records[whichItem].attributes)">
-                      <leaflet layers="layers" center="center" legend="legend" width="650" height="500" geojson="geojson"></leaflet>
+                  <div class="col-md-7" >
+                      <leaflet layers="layers" center="center" width="650" height="500" geojson="geojson"></leaflet>
                   </div>
                   <div class="col-md-5">
                       <div>
@@ -15,7 +16,7 @@
                               <dt ng-show="records[whichItem].attributes.PROJECTNAME">PROJECT NAME:</dt>
                               <dd>{{records[whichItem].attributes.PROJECTNAME}}</dd>
                               <dt ng-show="records[whichItem].attributes.DEVPLANID">DEVPLANID:</dt>
-                              <dd>{{records[whichItem].attributes.DEVPLANID}}</dd>
+                              <dd><a ng-href="http://gis.raleighnc.gov/publicutility/devplans/{{records[whichItem].attributes.DEVPLANID}}">{{records[whichItem].attributes.DEVPLANID}}</a></dd>
                               <dt ng-show="records[whichItem].attributes.FORMERNAME">FORMER NAME:</dt>
                               <dd>{{records[whichItem].attributes.FORMERNAME}}</dd>
                               <dt ng-show="records[whichItem].attributes.ALIAS">ALIAS:</dt>
@@ -23,13 +24,13 @@
                               <dt ng-show="records[whichItem].attributes.CIP">CIP:</dt>
                               <dd>{{records[whichItem].attributes.CIP}}</dd>
                               <dt ng-show="records[whichItem].attributes.WATER">WATER:</dt>
-                              <dd>{{records[whichItem].attributes.WATER}}</dd>
+                              <dd ng-show="records[whichItem].attributes.WATER" class="text-primary"><strong>True</strong></dd>
                               <dt ng-show="records[whichItem].attributes.SEWER">SEWER:</dt>
-                              <dd>{{records[whichItem].attributes.SEWER}}</dd>
+                              <dd ng-show="records[whichItem].attributes.SEWER" class="text-success"><strong>True</strong></dd>
                               <dt ng-show="records[whichItem].attributes.REUSE">REUSE:</dt>
-                              <dd>{{records[whichItem].attributes.REUSE}}</dd>
+                              <dd ng-show="records[whichItem].attributes.REUSE" style="color:#470467"><strong>True</strong></dd>
                               <dt ng-show="records[whichItem].attributes.STORM">STORM:</dt>
-                              <dd>{{records[whichItem].attributes.STORM}}</dd>
+                              <dd ng-show="records[whichItem].attributes.STORM" class="text-warning"><strong>True</strong></dd>
                           </dl>
                       </div>
                   </div>
@@ -37,7 +38,7 @@
         </div>
       
       <br>
-        <button type="button" class="btn btn-danger btn-lg" data-toggle="collapse" data-target="#drawings" ng-click="getFiles(records[whichItem].attributes.PLAN)"><span class="glyphicon glyphicon-list">  Drawings</span></button>
+        <button type="button" class="btn btn-danger btn-lg" data-toggle="collapse" data-target="#drawings" ng-click="getFiles(records[whichItem].attributes.DEVPLANID)"><span class="glyphicon glyphicon-list">  Development Plans</span></button>
         <div id="drawings" class="collapse"><div class="list-group" ng-bind-html="parsedHTML">Holla</div></div>
         
         </div>
