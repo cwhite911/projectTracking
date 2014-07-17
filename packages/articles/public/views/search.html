@@ -2,14 +2,16 @@
     <div ng-cloak class="container">
       <div class="row">
         <section class="seach">
-            <div class="col-md-2">
+            <div class="col-xs-2">
             <ul class="nav nav-pills nav-stacked">
               <li ng-class="{'active': pageState.devPlan, '': !pageState.devPlan}"><a href="" ng-click="checkSeachState('devPlan')">Development Plans</a></li>
               <li ng-class="{'active': pageState.project, '': !pageState.project}"><a href="" ng-click="checkSeachState('project')">Projects</a></li>
               <li ng-class="{'active': pageState.detailedIntersection, '': !pageState.detailedIntersection}"><a href="" ng-click="checkSeachState('detailedIntersection')">Detailed Intersection</a></li>
+              <li ng-class="{'active': pageState.asbuilt_received, '': !pageState.asbuilt_received}"><a href="" ng-click="checkSeachState('asbuilt_received')">AS-Builts Recieved</a></li>
             </ul>
+                
         </div>
-	        <div ng-show="pageState.devPlan" class="col-md-10">
+	        <div ng-show="pageState.devPlan" class="col-xs-10">
 		        <input id="search" class="center-block" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for Record..."><br>
 		        <label class="center-block">Plan Type: </label>
 		        <select ng-model="planType">
@@ -64,7 +66,7 @@
                     </ul>
         </div>
 <!-- Beginning of Project Tracking Tab -->
-        <div ng-show="pageState.project" class="col-md-10">
+        <div ng-show="pageState.project" class="col-xs-10">
             <input id="search" class="center-block" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for Project..."><br>
             {{getRecordLength(searchText, planType)}} 
 	        <table ng-show="searchText" class="table table-hover">
@@ -99,7 +101,7 @@
             </ul> 
         </div>
        <!-- Beginning of Detailed Intersections -->
-        <div ng-show="pageState.detailedIntersection" class="col-md-10">
+        <div ng-show="pageState.detailedIntersection" class="col-xs-10">
             <input id="search" class="center-block" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for Intersection..."><br>
             {{getRecordLength(searchText, planType)}} 
             <div class="alert alert-danger" role="alert">Data is actively being corrected, please forgive any errors at this time.<br>Thanks- PUGIS</div>
@@ -135,6 +137,46 @@
 				<li class="disabled"><a href="" ng-show="pageNumber === numberPages - 1">&raquo;</a></li>
             </ul> 
         </div>
+        <!-- Beginning of As-builts recieved Tab -->
+        <div ng-show="pageState.asbuilt_received" class="col-xs-10">
+            <input id="search" class="center-block" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for AS-Built..."><br>
+            {{getRecordLength(searchText, planType)}} 
+	        <table ng-show="searchText" class="table table-hover">
+	            <thead>
+		            <tr class="active">
+  			            <th ng-repeat="column in fields | limitTo: 11"><a href="" ng-click="reverse=!reverse;order(column.name, reverse)">{{column.name}}</a></th>
+                        <th><a href="">INFO</a></th>
+		            </tr>
+	            </thead>
+	            <tbody>
+		            <tr ng-repeat="item in pageInfo[pageNumber] | orderBy:predicate:reverse">
+  			            <td class="active">{{item.OBJECTID}}</td>
+                        <td>{{item.PROJECT_NAME}}</td>
+                        <td>{{item.ASBUILT_DATE | date: 'shortDate'}}</td>
+                        <td>{{item.ASSIGNMENT}}</td>
+                        <td>{{item.DATE_DIGITIZED | date: 'shortDate'}}</td>
+                        <td>{{item.DELIVERY_DATE | date: 'shortDate'}}</td>
+                        <td>{{item.W_PERMIT}}</td>
+                        <td>{{item.S_PERMIT}}</td>
+                        <td>{{item.PVT_W_PERMIT}}</td>
+                        <td>{{item.PVT_S_PERMIT}}</td>
+                        <td>{{item.COMMENTS}}</td>
+                        <td><a ng-href="/#!/articles/search/project/{{records.indexOf(item)}}"><button type="button" class="btn btn-primary btn-sm" ><span class="glyphicon glyphicon-info-sign"></span></button></a></td>
+                    </tr>
+                 </tbody>
+                <tfoot>Results: {{filteredText.length}}</tfoot>
+            </table>
+            <h3 ng-show="searchText" class="text-info">Page {{pageNumber + 1}} of {{numberPages}}</h3>
+            
+            <ul ng-show="searchText" class="pagination">
+				<li><a href="" ng-show="pageNumber !== 0" ng-click="prevPage()" >&laquo;</a></li>
+				<li class="disabled"><a href="" ng-show="pageNumber === 0" >&laquo;</a></li>
+				<li ng-class="{'active': pageNumber === page, '': !pageNumber}" ng-repeat="page in pageArray | limitTo: pageSize"><a href="" ng-click="checkPage(page);">{{page + 1}}</a></li>
+				<li><a href="" ng-show="pageNumber !== numberPages - 1" ng-click="nextPage()">&raquo;</a></li>
+				<li class="disabled"><a href="" ng-show="pageNumber === numberPages - 1">&raquo;</a></li>
+            </ul> 
+        </div>
+        <!--End of searches -->
         </section>
       </div>
     </div>

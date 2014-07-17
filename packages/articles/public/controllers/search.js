@@ -23,7 +23,8 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
     $scope.pageState = {
         	devPlan: true,
         	project: false,
-        	detailedIntersection: false
+        	detailedIntersection: false,
+        	asbuilt_received: false
     	};
 
     $scope.checkSeachState = function (data){
@@ -111,6 +112,16 @@ angular.module('mean').controller('SearchCtrl', ['$scope','$http', '$filter', fu
            	if ($scope.pageState.detailedIntersection === true){
                 for (var each in $scope.data){
             		if ($scope.data[each].name === 'RPUD.DetailedIntersections'){
+                        $scope.fields = [];
+						$scope.records = [];
+                        start = 0;
+                		getData(start, $scope.data[each].id);
+        			}
+             	}  
+    		}
+            if ($scope.pageState.asbuilt_received === true){
+                for (var each in $scope.data){
+            		if ($scope.data[each].name === 'RPUD.ASBUILTS_RECEIVED'){
                         $scope.fields = [];
 						$scope.records = [];
                         start = 0;
