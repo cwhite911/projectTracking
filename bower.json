@@ -13,6 +13,7 @@
     "angular-ui-router": "#master",
     "angular-leaflet": "~0.7.7",
     "esri-leaflet": "latest",
-    "leaflet-plugins": "latest"
+    "leaflet-plugins": "latest",
+    "angular-file-upload": "1.0.1" 
   }
 }

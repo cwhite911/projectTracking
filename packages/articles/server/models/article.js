@@ -25,6 +25,11 @@ var ArticleSchema = new Schema({
         required: true,
         trim: true
     },
+    path: {
+        type: String,
+        required: true,
+        trim: true
+    },
     user: {
         type: Schema.ObjectId,
         ref: 'User'
