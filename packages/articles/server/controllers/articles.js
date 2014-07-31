@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 
 var path = require('path');
 var fs = require('fs');
+var busboy = require('connect-busboy');
 var join = path.join;
 /**
  * Find article by id
@@ -44,14 +45,17 @@ exports.create = function(req, res) {
 
 exports.uploadFile = function(dir){
     return function(req, res, next){
-        var article = new Article(req.body);
-    	var img = req.files.image;
-    	var name = article.path;
-    	var path = join(dir, img.name);
-		res.send(name);
-    	fs.rename(img.path, path, function(err){
-      		if (err) return next(err);
-   		 });
+        var fstream;
+        // res.setHeader('Content-Type', 'multipart/form-data');
+        req.pipe(req.busboy);
+        req.busboy.on('file', function (fieldname, file, filename) {
+            console.log("Uploading: " + filename); 
+            fstream = fs.createWriteStream(dir + filename);
+            file.pipe(fstream);
+            fstream.on('close', function () {
+                res.redirect('back');
+            });
+   		});
     }
               
     

@@ -1,7 +1,8 @@
 'use strict';
 var articles = require('../controllers/articles');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
+// var bodyParser = require('body-parser');
+// var methodOverride = require('method-override');
+var busboy = require('connect-busboy');
 
 
 // Article authorization helpers
@@ -13,14 +14,17 @@ var hasAuthorization = function(req, res, next) {
 };
 
 module.exports = function(Articles, app, auth) {
-    app.use(bodyParser());
-	app.use(methodOverride());
+ //    app.use(bodyParser());
+	// app.use(methodOverride());
+    app.use(busboy());
 //     app.use(app.router);
-	app.set('docs', __dirname + './public/assets/docs');
+
+	app.set('docs', '../projectTracking/packages/articles/public/assets/asbuilts');
     app.route('/articles')
         .get(articles.all)
-    	.post(auth.requiresLogin, articles.uploadFile(app.get('docs')))
+        .post(auth.requiresLogin, articles.uploadFile(app.get('docs')))
         .post(auth.requiresLogin, articles.create);
+        
     	
     app.route('/articles/:articleId')
         .get(articles.show)
