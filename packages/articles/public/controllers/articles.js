@@ -1,14 +1,40 @@
 'use strict';
 
-angular.module('mean').controller('ArticlesController', ['$scope', '$stateParams', '$location', 'Global', 'Articles', 'FileUploader',
-    function($scope, $stateParams, $location, Global, Articles, FileUploader) {
+angular.module('mean').controller('ArticlesController', ['$scope', '$http', '$stateParams', '$location', 'Global', 'Articles', 'FileUploader',
+    function($scope, $http, $stateParams, $location, Global, Articles, FileUploader) {
         $scope.global = Global;
+        $scope.formTitle = {title: null};
         $scope.uploader = new FileUploader({ 
-            url: '/articles',
+            url: '/articles/asbuilt',
+            alias: 'title',
+            method: 'POST',
             removeAfterUpload: true,
             isUploading: true
             
-        	});
+        });
+
+        $scope.surveyUploader = new FileUploader({ 
+            url: '/survey',
+            alias: 'title',
+            method: 'POST',
+            removeAfterUpload: true,
+            isUploading: true
+            
+        });
+
+        $scope.updateAlias = function (data){
+            console.log(data);
+            if (data){
+                $scope.uploader.alias = data;
+                $scope.surveyUploader.alias = data;
+                $scope.formTitle.title = data;
+            }
+            else{
+                $scope.uploader.alias = 'temp';
+                $scope.surveyUploader.alias = 'temp';
+            }
+        };
+
         $scope.uploader.filters.push({
             name: 'imageFilter',
             fn: function(item /*{File|FileLikeObject}*/, options) {
@@ -16,17 +42,37 @@ angular.module('mean').controller('ArticlesController', ['$scope', '$stateParams
                 return '|pdf|PDF|txt|TXT|csv|CSV'.indexOf(type) !== -1;
             }
         });
+        // $scope.surveyUploader.filters.push({
+        //     name: 'imageFilter',
+        //     fn: function(item /*{File|FileLikeObject}*/, options) {
+        //         var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+        //         return '|csv|CSV'.indexOf(type) !== -1;
+        //     }
+        // });
         $scope.hasAuthorization = function(article) {
             if (!article || !article.user) return false;
             return $scope.global.isAdmin || article.user._id === $scope.global.user._id;
         };
 
+        $scope.getFileNames = function (queue){
+            var files = [];
+            for (var each in queue){
+                if (queue[each].file.name !== undefined){
+                    files.push(queue[each].file.name);
+                }
+            }
+            return files;
+        };
+
+       
         $scope.create = function(isValid) {
             if (isValid) {
                 var article = new Articles({
-                    title: this.title,
+                    title: $scope.formTitle.title,
                     content: this.content,
-                    path: $scope.uploader.queue[0].file.name
+                    path: $scope.getFileNames($scope.uploader.queue),
+                    transaction: this.transaction,
+                    subdivision: this.subdivision
                 });
                 article.$save(function(response) {
                     $location.path('articles/' + response._id);
@@ -38,7 +84,8 @@ angular.module('mean').controller('ArticlesController', ['$scope', '$stateParams
             } else {
                 $scope.submitted = true;
             }
-//             $scope.uploader.uploadAll()
+            $scope.uploader.uploadAll();
+            $scope.surveyUploader.uploadAll();
         };
 
         $scope.remove = function(article) {
@@ -87,6 +134,7 @@ angular.module('mean').controller('ArticlesController', ['$scope', '$stateParams
             });
         };
     }
+
 ]);
 
 

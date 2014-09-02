@@ -16,7 +16,9 @@ var morgan = require('morgan'),
     helpers = require('view-helpers'),
     config = require('meanio').loadConfig(),
     expressValidator = require('express-validator'),
-    assetmanager = require('assetmanager');
+    assetmanager = require('assetmanager'),
+    cors = require('cors');
+    
 
 module.exports = function(app, passport, db) {
 
@@ -28,7 +30,6 @@ module.exports = function(app, passport, db) {
 
     // cache=memory or swig dies in NODE_ENV=production
     app.locals.cache = 'memory';
-
     // Should be placed before express.static
     // To ensure that all assets and data are compressed (utilize bandwidth)
     app.use(compression({
@@ -50,7 +51,7 @@ module.exports = function(app, passport, db) {
 
     // Enable jsonp
     app.enable('jsonp callback');
-
+  
     // The cookieParser should be above session
     app.use(cookieParser());
 
@@ -61,7 +62,7 @@ module.exports = function(app, passport, db) {
         extended: true
     }));
     app.use(methodOverride());
-
+    
     // Import the assets file and add to locals
     var assets = assetmanager.process({
         assets: require('./assets.json'),
@@ -101,6 +102,14 @@ module.exports = function(app, passport, db) {
 
     //mean middleware from modules before routes
     app.use(mean.chainware.before);
+
+    app.use(cors());
+//     var allowCrossDomain = function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "X-Requested-With");
+//   next();
+// }
+//     app.use(allowCrossDomain);
 
     // Connect flash for flash messages
     app.use(flash());

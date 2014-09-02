@@ -11,12 +11,13 @@
                       <leaflet layers="layers" center="center" width="650" height="500" geojson="geojson"></leaflet>
                   </div>
                   <div class="col-md-5">
-                      <div>
+                      <div class="infopad">
                           <dl class="dl-horizontal">
+                            <!-- /packages/articles/server/routes/docs/DevPlans/GH-5-2011/ -->
                               <dt ng-show="records[whichItem].attributes.PROJECTNAME">PROJECT NAME:</dt>
                               <dd>{{records[whichItem].attributes.PROJECTNAME}}</dd>
                               <dt ng-show="records[whichItem].attributes.DEVPLANID">DEVPLANID:</dt>
-                              <dd><a ng-href="http://gis.raleighnc.gov/publicutility/devplans/{{records[whichItem].attributes.DEVPLANID}}">{{records[whichItem].attributes.DEVPLANID}}</a></dd>
+                              <dd><a ng-href="http://taskrunner/corpubw/{{records[whichItem].attributes.DEVPLANID}}">{{records[whichItem].attributes.DEVPLANID}}</a></dd>
                               <dt ng-show="records[whichItem].attributes.FORMERNAME">FORMER NAME:</dt>
                               <dd>{{records[whichItem].attributes.FORMERNAME}}</dd>
                               <dt ng-show="records[whichItem].attributes.ALIAS">ALIAS:</dt>

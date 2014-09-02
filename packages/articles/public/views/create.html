@@ -1,11 +1,35 @@
 <section data-ng-controller="ArticlesController">
-    <form name="articleForm" class="form-horizontal col-md-6" role="form" data-ng-submit="create(articleForm.$valid)" enctype='multipart/form-data' novalidate>
+    <form name="articleForm" class="form-horizontal col-md-6 infopad" role="form" data-ng-submit="create(articleForm.$valid)" enctype='multipart/form-data' novalidate>
         <div class="form-group" ng-class="{ 'has-error' : submitted && articleForm.title.$invalid }">
             <label mean-token="'create-title'" class="col-md-3 control-label">Title</label>
-            <div class="col-md-9">
-                <input name="title" type="text" class="form-control" data-ng-model="title" id="title" placeholder="Title" required>
+            <div class="col-md-9" ng-controller="ProjectCtrl">
+                <select name="title" class="form-control" data-ng-model="title" id="title" ng-options="project.PROJECTNAME for project in projectNames | orderBy:predicate" ng-change="updateAlias(title.SPROJECTID)" required>
+                    <option value="" selected>-- Please Select Project --</option>
+                    <!-- <option ng-repeat="project in projectNames | orderBy:predicate" value="{{project.SPROJECTID}}">{{project.PROJECTNAME}} - {{project.DEVPLANID}}</option> -->
+                </select>
+                <!-- <input name="title" type="text" class="form-control" data-ng-model="title" id="title" placeholder="Title" ng-change="updateAlias(articleForm)" required> -->
                 <div ng-show="submitted && articleForm.title.$invalid" class="help-block">
                     <p ng-show="articleForm.title.$error.required">Title is required</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group" ng-class="{ 'has-error' : submitted && articleForm.transaction.$invalid }">
+            <label mean-token="'create-transaction'" class="col-md-3 control-label">Transaction Number</label>
+            <div class="col-md-9">
+                <input name="transaction" type="number" class="form-control" data-ng-model="transaction" id="transaction" placeholder="Transaction Number" min="100000" max="999999" integer required>
+                <div ng-show="submitted && articleForm.transaction.$invalid" class="help-block">
+                    <p ng-show="articleForm.transaction.$error.required">6 digit transaction number is required</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group" ng-class="{ 'has-error' : submitted && articleForm.subdivision.$invalid }">
+            <label mean-token="'create-subdivision'" class="col-md-3 control-label">Subdivision Number</label>
+            <div class="col-md-9">
+                <input name="subdivision" type="number" class="form-control" data-ng-model="subdivision" id="subdivision" placeholder="subdivision Number" min="1" max="999" integer required>
+                <div ng-show="submitted && articleForm.subdivision.$invalid" class="help-block">
+                    <p ng-show="articleForm.subdivision.$error.required">Subdivision number is required</p>
                 </div>
             </div>
 
@@ -71,13 +95,100 @@
                             </tr>
                         </tbody>
                     </table>
-   
+   <div>
+                        <div>
+                            Queue progress:
+                            <div class="progress" style="">
+                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                        </button>
+                        <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+                            <span class="glyphicon glyphicon-trash"></span> Remove all
+                        </button>
+                    </div>
             </div>
 
         </div>
+
+<!--Survey Points-->
+<div class="form-group" ng-class="{ 'has-error' : submitted && articleForm.path.$invalid }">
+            <label mean-token="'create-path'" class="col-md-3 control-label">Survey Points</label>
+            <div class="col-md-9">
+                <input type="file" nv-file-select="" uploader="surveyUploader" name="file" id="file" multiple  />
+        <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="50%">Name</th>
+                                <th ng-show="surveyUploader.isHTML5">Size</th>
+                                <th ng-show="surveyUploader.isHTML5">Progress</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in surveyUploader.queue">
+                                <td>
+                                    <strong>{{ item.file.name }}</strong>
+                   
+                                    <!-- Image preview -->
+                                    <!--auto height-->
+                                    <!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+                                    <!--auto width-->
+<!--                                     <div ng-show="uploader.isHTML5" ng-thumb="{ file: item.file, height: 100 }"></div> -->
+                                
+                                 
+                                </td>
+                                <td ng-show="surveyUploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                <td ng-show="surveyUploader.isHTML5">
+                                    <div class="progress" style="margin-bottom: 0;">
+                                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                    <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                    <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                </td>
+                                <td nowrap>
+                                    <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                        <span class="glyphicon glyphicon-upload"></span> Upload
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                        <span class="glyphicon glyphicon-trash"></span> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+   <div>
+                        <div>
+                            Queue progress:
+                            <div class="progress" style="">
+                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': surveyUploader.progress + '%' }"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-warning btn-s" ng-click="surveyUploader.cancelAll()" ng-disabled="!surveyUploader.isUploading">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                        </button>
+                        <button type="button" class="btn btn-danger btn-s" ng-click="surveyUploader.clearQueue()" ng-disabled="!surveyUploader.queue.length">
+                            <span class="glyphicon glyphicon-trash"></span> Remove all
+                        </button>
+                    </div>
+            </div>
+
+        </div>
+<!--End-->
+
+
         <ul>
-            <li>Transaction Number</li>
-            <li>Subdivision Number</li>
+            <li><s>Transaction Number</s></li>
+            <li><s>Subdivision Number</s></li>
             <li>Survey Points</li>
             <li>Warrenty Letter</li>
             <li>Statement of Cost</li>
@@ -88,9 +199,9 @@
                 <button type="submit" class="btn btn-info">Submit</button>
             </div>
         </div><br><br><br>
-        <div ng-cloak class="footer">
+        <!-- <div ng-cloak class="footer">
   <p class="pull-left"><img style="width:20px; height: 20px;" ng-src="/packages/articles/public/assets/img/City-Seal-2color.png"> City of Raleigh - Public Utilities - GIS</p>
-</div>
+</div> -->
     </form>
   
 </section>

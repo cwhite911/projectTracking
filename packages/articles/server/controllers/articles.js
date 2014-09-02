@@ -7,10 +7,10 @@ var mongoose = require('mongoose'),
     Article = mongoose.model('Article'),
     _ = require('lodash');
 
-var path = require('path');
+
 var fs = require('fs');
-var busboy = require('connect-busboy');
-var join = path.join;
+// var busboy = require('connect-busboy');
+
 /**
  * Find article by id
  */
@@ -33,7 +33,8 @@ exports.create = function(req, res) {
     article.save(function(err) {
         if (err) {
             return res.jsonp(500, {
-                error: 'Cannot save the article'
+                error: 'Cannot save the article',
+                info: article
             });
         }
         res.jsonp(article);
@@ -46,17 +47,35 @@ exports.create = function(req, res) {
 exports.uploadFile = function(dir){
     return function(req, res, next){
         var fstream;
-        // res.setHeader('Content-Type', 'multipart/form-data');
         req.pipe(req.busboy);
         req.busboy.on('file', function (fieldname, file, filename) {
-            console.log("Uploading: " + filename); 
-            fstream = fs.createWriteStream(dir + filename);
-            file.pipe(fstream);
-            fstream.on('close', function () {
+            console.log('Uploading: ' + filename); 
+
+            var folder = fieldname;
+            if (fs.exists(dir + folder)){
+                fstream = fs.createWriteStream(dir + folder + '/' + filename);
+                file.pipe(fstream);
+                fstream.on('close', function () {
+                    res.redirect('back');
+                });
+            }
+            else {
+                fs.mkdir(dir + folder);
+                fstream = fs.createWriteStream(dir + folder + '/' + filename);
+                file.pipe(fstream);
+                fstream.on('close', function () {
                 res.redirect('back');
             });
+            }
+            
    		});
-    }
+        // req.busboy.on('field', function (key, value, keyTruncated, valueTruncated){
+        //     console.log(key);
+        //     console.log(value);
+
+        // });
+
+    };
               
     
 };

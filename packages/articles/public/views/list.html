@@ -1,6 +1,8 @@
 <section data-ng-controller="ArticlesController" data-ng-init="find()">
+    <input type="text" class="pull-right" ng-model="searchText" placeholder="Search...">
+    <div class="infopad"><h2 class="text-danger">{{global.user.name}}'s Projects</h2>
     <ul class="articles unstyled">
-        <li data-ng-repeat="article in articles">
+        <li ng-show="article.user.name === global.user.name ? true : false" data-ng-repeat="article in articles | filter:searchText | limitTo: 8">
             <span>{{article.created | date:'medium'}}</span> /
             <span>{{article.user.name}}</span>
             <h2>
@@ -14,8 +16,9 @@
                     </a>
                 </span>
             </h2>
-            <div>{{article.content}}</div>
+            <div>{{article.content}}</div> 
         </li>
     </ul>
+    </div>
     <h1 data-ng-hide="!articles || articles.length">No articles yet. <br> Why don't you <a href="/#!/articles/create">Create One</a>?</h1>
 </section>

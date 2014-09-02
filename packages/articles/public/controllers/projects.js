@@ -64,6 +64,10 @@ angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParam
     });  
 	
 	console.log($scope.records);
+
+
+    
+    
     
 //Set up to project data back to ArcGIS Server
 //         $scope.geoOptions = {
@@ -90,7 +94,7 @@ angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParam
 // });
 
 	$scope.getFiles = function (plan){
-		$scope.req = 'http://gis.raleighnc.gov/publicutility/devplans/' + plan;
+		$scope.req = 'http://localhost:8000/corpubw/' + plan;
 		$http.get($scope.req)
 			.success(function(data){
 				console.log(data);
@@ -108,6 +112,26 @@ angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParam
 				}
 			});
 	};
+
+    // $scope.getFiles = function (plan){
+    //     $.ajax({
+    //         url: 'http://taskrunner/corpubw/' + plan,
+    //         type: 'GET',
+    //         // crossDomain: true,
+    //         // xhrFields: {
+    //         //     withCredentials: true
+    //         // },
+    //         dataType: 'jsonp',
+    //         mimeType: 'text/javascript', 
+    //         success: function (data){
+    //             console.log(data);
+    //         }
+
+
+    //     })
+    // }
+
+
     
 //Check permits
 
@@ -127,6 +151,10 @@ angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParam
         $scope.geojson = {
             "type": "FeatureCollection",
     		"features": [
+        //     { "type": "Feature",
+        // "geometry": {"type": "Point", "coordinates": [35.843768, -78.6450559]},
+        // "properties": {"prop0": "value0"}
+        // },
       			{ 
                     "type": "Feature",
          			"geometry": {
@@ -159,8 +187,19 @@ angular.module('mean').controller('ProjectCtrl', ['$scope','$http', '$stateParam
         });
 };
     
+
+$scope.projectNames = [];
+    $scope.predicate = 'PROJECTNAME';
+    
 //Watach records for changes and set geojson data 
   $scope.$watchCollection('records', function(curretn, past){
+    for (var p in $scope.records){
+            $scope.projectNames.push($scope.records[p].attributes);
+        }
+        for (var s in $scope.projectNames){
+            $scope.projectNames[s].SPROJECTID = $scope.projectNames[s].PROJECTID.toString();
+        }
+        $scope.title = $scope.projectNames[1];
       if ($scope.records[$scope.whichItem] !== undefined){
     	$scope.geo = $scope.records[$scope.whichItem].geometry.rings;
     	$scope.attr = $scope.records[$scope.whichItem].attributes;

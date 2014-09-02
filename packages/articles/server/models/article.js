@@ -30,6 +30,14 @@ var ArticleSchema = new Schema({
         required: true,
         trim: true
     },
+    transaction: {
+        type: Number,
+        required: true,
+    },
+    subdivision: {
+        type: Number,
+        required: true,
+    },
     user: {
         type: Schema.ObjectId,
         ref: 'User'
@@ -45,6 +53,10 @@ ArticleSchema.path('title').validate(function(title) {
 
 ArticleSchema.path('content').validate(function(content) {
     return !!content;
+}, 'Content cannot be blank');
+
+ArticleSchema.path('path').validate(function(path) {
+    return !!path;
 }, 'Content cannot be blank');
 
 /**

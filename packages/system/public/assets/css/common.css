@@ -1,3 +1,8 @@
+body {
+    background: url("/system/assets/img/downtownRaleigh.jpg");
+    background-size: cover;
+}
+
 .page-header {
     padding-bottom: 0 !important;
     margin: 0 !important;
@@ -27,7 +32,7 @@
     width:100%
 }
 footer {
-    position:fixed;
+    position:relative;
     left:0;
     bottom:0;
     height:30px;

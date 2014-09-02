@@ -20,12 +20,12 @@ Articles.register(function(app, auth, database) {
     //We are adding a link to the main menu for all authenticated users
     Articles.menus.add({
         'roles': ['authenticated'],
-        'title': 'Articles',
+        'title': 'Your Projects',
         'link': 'all articles'
     });
     Articles.menus.add({
         'roles': ['authenticated'],
-        'title': 'Create New Article',
+        'title': 'Add Project',
         'link': 'create article'
     });
     Articles.menus.add({
@@ -35,7 +35,7 @@ Articles.register(function(app, auth, database) {
     });
     Articles.menus.add({
         'roles': ['authenticated'],
-        'title': 'Add Record',
+        'title': 'Add Development Plan',
         'link': 'add record'
     });
     Articles.menus.add({

@@ -4,6 +4,15 @@ h1 {
 ul.articles li:not(:last-child) {
 	border-bottom: 1px solid #ccc
 }
+input {
+  background-color: rgba(255,255,255, 0.5);
+}
+.infopad {
+  width: auto;
+  padding: 50px 50px 10px 50px;
+  background-color: rgba(255,255,255, 0.7);
+  border-radius: 25px;
+}
 #search {
   width: 90%;
   min-width: 320px;
@@ -16,7 +25,7 @@ ul.articles li:not(:last-child) {
   font-size: 40px;
 }
 
-#search h1 {
+#search h1 { 
   color: #EEE8D5;
 }
 

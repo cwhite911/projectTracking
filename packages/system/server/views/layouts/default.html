@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="https://www.facebook.com/2008/fbml" itemscope="itemscope" itemtype="http://schema.org/Product">
 {% include '../includes/head.html' %}
 
-<body>
+<body style="background: url("/system/assets/img/downtownRaleigh.jpg"); background-size: cover;">
     <div class="navbar navbar-inverse navbar-fixed-top" data-ng-include="'/system/views/header.html'" data-role="navigation"></div>
     {% if adminEnabled %}
     <section class="admin-menu">
@@ -14,6 +14,13 @@
             {% block content %}{% endblock %}
         </section>
     </section>
+
+    <div style="position:absolute; right:0; bottom:0;">
+        <p><img style="width:20px; height: 20px;" ng-src="/system/assets/img/City-Seal-2color.png"><a href="raleighnc.gov">City of Raleigh - Public Utilities - GIS</a></p>
+    </div>
+    <div style="position:absolute; left:0; bottom:0;">
+        <a href="https://www.flickr.com/photos/bz3rk/">James Willamor @ Flickr</a>
+    </div>
     {% include '../includes/foot.html' %}
 </body>
 

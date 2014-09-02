@@ -1,7 +1,7 @@
 <section data-ng-controller="SearchCtrl">
     <div ng-cloak class="container">
       <div class="row">
-        <section class="seach">
+        <section>
             <div class="col-xs-2">
             <ul class="nav nav-pills nav-stacked">
               <li ng-class="{'active': pageState.devPlan, '': !pageState.devPlan}"><a href="" ng-click="checkSeachState('devPlan')">Development Plans</a></li>
@@ -11,7 +11,7 @@
             </ul>
                 
         </div>
-	        <div ng-show="pageState.devPlan" class="col-xs-10">
+	        <div ng-show="pageState.devPlan" class="col-xs-12 infopad">
 		        <input id="search" class="center-block" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for Record..."><br>
 		        <label class="center-block">Plan Type: </label>
 		        <select ng-model="planType">
@@ -66,26 +66,26 @@
                     </ul>
         </div>
 <!-- Beginning of Project Tracking Tab -->
-        <div ng-show="pageState.project" class="col-xs-10">
+        <div ng-show="pageState.project" class="col-xs-12 infopad">
             <input id="search" class="center-block" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for Project..."><br>
             {{getRecordLength(searchText, planType)}} 
 	        <table ng-show="searchText" class="table table-hover">
 	            <thead>
-		            <tr class="active">
+		            <tr class="info">
   			            <th ng-repeat="column in fields | limitTo : 6 "><a href="" ng-click="reverse=!reverse;order(column.name, reverse)">{{column.name}}</a></th>
                         <th><a href="">INFO</a></th>
 		            </tr>
 	            </thead>
 	            <tbody>
-		            <tr ng-repeat="item in pageInfo[pageNumber] | orderBy:predicate:reverse">
-  			            <td class="active">{{item.OBJECTID}}</td>
+		            <tr class="active" ng-repeat="item in pageInfo[pageNumber] | orderBy:predicate:reverse">
+                    <td>{{item.OBJECTID}}</td>
   						<td>{{item.PROJECTID}}</td>
   						<td>{{item.DEVPLANID}}</td>
   						<td>{{item.PROJECTNAME}}</td>
   						<td>{{item.FORMERNAME}}</td>
   						<td>{{item.ALIAS}}</td>
   						<td>{{item.CIP}}</td>
-                        <td><a ng-href="/#!/articles/search/project/{{records.indexOf(item)}}"><button type="button" class="btn btn-primary btn-sm" ><span class="glyphicon glyphicon-info-sign"></span></button></a></td>
+              <td><a ng-href="/#!/articles/search/project/{{records.indexOf(item)}}"><button type="button" class="btn btn-primary btn-sm" ><span class="glyphicon glyphicon-info-sign"></span></button></a></td>
                     </tr>
                  </tbody>
                 <tfoot>Results: {{filteredText.length}}</tfoot>
@@ -101,7 +101,7 @@
             </ul> 
         </div>
        <!-- Beginning of Detailed Intersections -->
-        <div ng-show="pageState.detailedIntersection" class="col-xs-10">
+        <div ng-show="pageState.detailedIntersection" class="col-xs-12 infopad">
             <input id="search" class="center-block" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for Intersection..."><br>
             {{getRecordLength(searchText, planType)}} 
             <div class="alert alert-danger" role="alert">Data is actively being corrected, please forgive any errors at this time.<br>Thanks- PUGIS</div>
@@ -138,7 +138,7 @@
             </ul> 
         </div>
         <!-- Beginning of As-builts recieved Tab -->
-        <div ng-show="pageState.asbuilt_received" class="col-xs-10">
+        <div ng-show="pageState.asbuilt_received" class="col-xs-12 infopad">
             <input id="search" class="center-block" ng-model="searchText" ng-change="pageNumber = 0;" autofocus placeholder="Search for AS-Built..."><br>
             {{getRecordLength(searchText, planType)}} 
 	        <table ng-show="searchText" class="table table-hover">
@@ -182,9 +182,9 @@
     </div>
 </section>  
 
-<div ng-cloak class="footer">
+<!-- <div ng-cloak class="footer">
   <p class="pull-right"><img style="width:20px; height: 20px;" ng-src="/packages/articles/public/assets/img/City-Seal-2color.png"> City of Raleigh - Public Utilities - GIS</p>
-</div>
+</div> -->
 
 
 

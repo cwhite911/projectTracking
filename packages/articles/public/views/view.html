@@ -2,6 +2,13 @@
     <span>{{article.created | date:'medium'}}</span> /
     <span>{{article.user.name}}</span>
     <h2>{{article.title}}</h2>
+    <pre ng-repeat="item in article">{{item}}</pre>
+    <div data-ng-controller="SurveyCtrl">
+
+        <button type="button" class="btn btn-primary" ng-click="getData(article.title)">Show Survey</button>
+        <leaflet width="650" height="500" center="raleigh" geojson="geojson"></leaflet>
+    </div>
+
     <div data-ng-if="hasAuthorization(article)">
         <a class="btn" href="/#!/articles/{{article._id}}/edit">
             <i class="glyphicon glyphicon-edit"></i>
